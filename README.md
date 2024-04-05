@@ -2,6 +2,7 @@
 # Estudo sobre o site PsyMeet
 
 
+Este projeto visa apresentar os estudos realizados sobre o site PsyMeet, uma plataforma online que oferece serviços de psicoterapia com um enfoque social. O site conta com mais de 800 profissionais cadastrados, cada um com sua área de especialidade e público-alvo específico. Essa diversidade nos permite realizar uma análise abrangente e detalhada do atendimento oferecido.
 
 ## Instalação
 Requerimentos:
