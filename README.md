@@ -1,15 +1,7 @@
 
 # Estudo sobre o site PsyMeet
 
-## Bibliotecas utilizadas
-```python
-from data.mysqls import BancoDeDados
-import pandas as pd
-from utils.psymeet import PsyMeet
-from matplotlib import pyplot as plt
-from wordcloud import WordCloud
 
-```
 
 ## Instalação
 Requerimentos:
@@ -23,6 +15,14 @@ pip install -r requirements.txt
 
 ```
 
+### Bibliotecas utilizadas
+```python
+import pandas as pd
+from utils.psymeet import PsyMeet
+from matplotlib import pyplot as plt
+from wordcloud import WordCloud
+
+```
 
 
 ### Scrapping
