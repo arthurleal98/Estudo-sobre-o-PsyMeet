@@ -149,15 +149,18 @@ class PsyMeet:
                     ddd = numero_telefone.text.split(' ')[1][1:3]
                     if ddd == self.localidade_por_ddd or self.localidade_por_ddd == '':
                         
-                        profissional = {
-                            'crp': self.obter_crp(psicologo),
-                            'nome': psicologo.find_element(by='class name', value='PsychologistCard_name__1begB').text,
-                            'link': psicologo.find_element(by='class name', value='PsychologistCard_profileImageContainer__3iDMG').get_attribute('href'),
-                            'especialidades': self.obter_lista_de_especialidades(psicologo),
-                            'sexo': self.obter_sexo(psicologo),
-                            'estado': self.obter_estado(ddd),
-                        }
-                        self.psicologos['psicologos'].append(profissional)
+                        crp = self.obter_crp(psicologo)
+                        # Verifique se o CRP já existe na lista
+                        if not any(p['crp'] == crp for p in self.psicologos['psicologos']):
+                            profissional = {
+                                'crp': crp,
+                                'nome': psicologo.find_element(by='class name', value='PsychologistCard_name__1begB').text,
+                                'link': psicologo.find_element(by='class name', value='PsychologistCard_profileImageContainer__3iDMG').get_attribute('href'),
+                                'especialidades': self.obter_lista_de_especialidades(psicologo),
+                                'sexo': self.obter_sexo(psicologo),
+                                'estado': self.obter_estado(ddd),
+                            }
+                            self.psicologos['psicologos'].append(profissional)
                     psicologo.parent.execute_script('return arguments[0].remove()', psicologo)
                 
                 if self.psicologos['psicologos'] != []:
@@ -173,6 +176,5 @@ class PsyMeet:
 
             except Exception as e:
                 print(e)
-                break
 
 

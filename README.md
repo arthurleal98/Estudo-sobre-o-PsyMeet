@@ -1,4 +1,3 @@
-
 # Estudo sobre o site PsyMeet
 
 
@@ -15,8 +14,10 @@ Requerimentos:
 pip install -r requirements.txt
 
 ```
-
 ### Bibliotecas utilizadas
+
+
+
 ```python
 import pandas as pd
 from utils.psymeet import PsyMeet
@@ -25,18 +26,23 @@ from wordcloud import WordCloud
 
 ```
 
-
 ### Scrapping
 
 Para realizar o scrapping do site do PsyMeet utilizamos o código: 
 
+
 ```python
 PsyMeet().scrape()
 ```
- Ao executarmos, o scrapping ocorrerá e todos os dados encontrados serão salvos no arquivos 'psicologos.json' na pasta 'data' do diretorio.
+
+Ao executarmos, o scrapping ocorrerá e todos os dados encontrados serão salvos no arquivos 'psicologos.json' na pasta 'data' do diretorio.
 
 ### Criação do Dataframe
+
+
+
 ```python
+# Ler o json e transformar em um dataframe
 df = pd.read_json('data/psicologos.json')
 
 # Inicializar listas para armazenar os dados
@@ -49,7 +55,7 @@ estados = []
 
 # Percorrer todo o df e ler e salvar os dados de forma de tabela
 for index, row in df.iterrows():
-    elemento  =  row[0]
+    elemento  =  row.iloc[0]
     crps.append(elemento['crp'])
     nomes.append(elemento['nome'])
     links.append(elemento['link'])
@@ -66,9 +72,16 @@ dados = pd.DataFrame({
     'sexo': sexos,
     'estado': estados
 })
+
+
+    
 ```
+
 Logo após a criação do Dataframe "**dados**", usaremos o **.describe()** para vizualizarmos como está estruturado o dataframe.
+
+
 ```python
+dados.head()
 dados.describe()
 ```
 
@@ -99,6 +112,7 @@ dados.describe()
       <th>especialidades</th>
       <th>sexo</th>
       <th>estado</th>
+      <th>regiao</th>
     </tr>
   </thead>
   <tbody>
@@ -110,33 +124,37 @@ dados.describe()
       <td>1600</td>
       <td>1600</td>
       <td>1600</td>
+      <td>1600</td>
     </tr>
     <tr>
       <th>unique</th>
-      <td>1068</td>
-      <td>1068</td>
-      <td>1068</td>
-      <td>1008</td>
+      <td>812</td>
+      <td>812</td>
+      <td>812</td>
+      <td>759</td>
       <td>2</td>
       <td>25</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>top</th>
-      <td>05/45909</td>
-      <td>Rachel da Silva Ribeiro Barreto</td>
-      <td>https://www.psymeetsocial.com/psicologo/rachel...</td>
+      <td>07/27763</td>
+      <td>Jéssica Silva Oliveira de Souza</td>
+      <td>https://www.psymeetsocial.com/psicologo/jessic...</td>
       <td>[Ansiedade, Depressão, Relacionamentos, Angúst...</td>
       <td>F</td>
       <td>SP</td>
+      <td>Sudeste</td>
     </tr>
     <tr>
       <th>freq</th>
       <td>2</td>
       <td>2</td>
       <td>2</td>
-      <td>25</td>
-      <td>1140</td>
-      <td>526</td>
+      <td>30</td>
+      <td>1153</td>
+      <td>498</td>
+      <td>922</td>
     </tr>
   </tbody>
 </table>
@@ -146,6 +164,8 @@ dados.describe()
 
 ## Gráficos
 ### Sexo dos psicólogos
+
+
 ```python
 valores_sexos = dados['sexo'].value_counts()
 labels = valores_sexos.index
@@ -156,16 +176,26 @@ ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=180)
 ax1.axis('equal')
 plt.show()
 
+print(valores_sexos)
+
 ```
 
 
     
-![png](imgs/output_4_0.png)
+![png](imgs/output_10_0.png)
     
 
-#
+
+    sexo
+    F    1153
+    M     447
+    Name: count, dtype: int64
+    
 
 ### Região demográfica dos psicólogos
+
+
+
 ```python
 regioes = {
     'Norte': ['AC', 'AM', 'AP', 'PA', 'RO', 'RR', 'TO'],
@@ -185,16 +215,29 @@ ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=180)
 ax1.axis('equal')
 plt.show()
 
+print(valores_regioes)
+
 ```
 
 
     
-![png](imgs/output_5_0.png)
+![png](imgs/output_12_0.png)
     
 
 
-#
+    regiao
+    Sudeste         922
+    Nordeste        331
+    Sul             213
+    Centro-Oeste    114
+    Norte            20
+    Name: count, dtype: int64
+    
+
 ### Quantidade de psicólogos por estado
+
+
+
 ```python
 valores_estados = dados['estado'].value_counts()
 #colocar mais cores
@@ -206,16 +249,50 @@ plt.xlabel('Quantidade de psicólogos')
 plt.ylabel('Estado')
 plt.show()
 
+print(valores_estados)
+
 
 ```
 
 
     
-![png](imgs/output_6_0.png)
+![png](imgs/output_14_0.png)
     
 
 
+    estado
+    SP    498
+    RJ    217
+    MG    185
+    PR    104
+    BA    100
+    CE     82
+    RS     81
+    PE     60
+    GO     42
+    DF     30
+    SC     28
+    MS     26
+    PB     26
+    ES     22
+    RN     22
+    MT     16
+    SE     14
+    MA     12
+    PI      9
+    PA      8
+    AL      6
+    RO      6
+    RR      2
+    AM      2
+    AC      2
+    Name: count, dtype: int64
+    
+
 ### Métodos para o WordCloud
+
+
+
 ```python
 def wordcloud_especialidades(dados):
     texto = ''
@@ -245,6 +322,7 @@ def value_counts_especialidades(dados):
 ### WordCloud das especialidades do sexo feminino
 
 
+
 ```python
 #fazer wordcloud com as especialidades baseado no sexo
 dados_F = dados[dados['sexo'] == 'F']
@@ -255,23 +333,24 @@ value_counts_especialidades(dados_F).head(5)
 
 
     
-![png](imgs/output_9_0.png)
+![png](imgs/output_18_0.png)
     
 
 
 
 
 
-    Ansiedade          1059
-    Depressão           925
-    Angústia            851
-    Autoestima          775
-    Relacionamentos     744
+    Ansiedade          1076
+    Depressão           912
+    Angústia            871
+    Autoestima          773
+    Relacionamentos     764
     Name: count, dtype: int64
 
 
 
  ### WordCloud do sexo Masculino
+
 
 
 ```python
@@ -282,21 +361,28 @@ value_counts_especialidades(dados_M).head(5)
 
 
     
-![png](imgs/output_11_0.png)
+![png](imgs/output_20_0.png)
     
 
 
 
 
 
-    Ansiedade          408
-    Depressão          377
-    Angústia           310
-    Relacionamentos    287
+    Ansiedade          401
+    Depressão          371
+    Angústia           317
+    Relacionamentos    284
     Autoestima         245
     Name: count, dtype: int64
 
 
 
-### Sobre
-Lembrando que esse repositório serve apenas como base de estudo.
+
+```python
+
+```
+
+
+```python
+
+```
